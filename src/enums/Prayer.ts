@@ -19,6 +19,7 @@ import Augury from '@/public/img/prayers/Augury.png';
 import ThickSkin from '@/public/img/prayers/Thick Skin.png';
 import RockSkin from '@/public/img/prayers/Rock Skin.png';
 import SteelSkin from '@/public/img/prayers/Steel Skin.png';
+import Zeal from '@/public/img/prayers/Zeal.png';
 import { StaticImageData } from 'next/image';
 import { Factor } from '@/lib/Math';
 
@@ -44,6 +45,7 @@ export enum Prayer {
   STEEL_SKIN = 18,
   DEADEYE = 19,
   MYSTIC_VIGOUR = 20,
+  ZEAL = 21,
 }
 
 export const DEFENSIVE_PRAYERS: Prayer[] = [
@@ -276,6 +278,16 @@ export const PrayerMap: { [k in Prayer]: PrayerData } = {
     factorAccuracy: [118, 100],
     factorDefenceMagic: [118, 100],
     factorDefence: [105, 100],
+  },
+  [Prayer.ZEAL]: {
+    renderOrder: 22,
+    name: 'Zeal',
+    image: Zeal,
+    drainRate: 24,
+    combatStyle: 'melee',
+    factorAccuracy: [125, 100],
+    factorStrength: [128, 100],
+    factorDefence: [125, 100],
   },
 };
 
