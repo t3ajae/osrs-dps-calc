@@ -131,3 +131,48 @@ export const rubyBolts: BoltTransformer = (ctx) => {
     ]);
   };
 };
+
+export const ascensiononyxBolts: BoltTransformer = (ctx) => {
+  const {
+    maxHit, zcb, spec, monster,
+  } = ctx;
+
+  if (monster.attributes.includes(MonsterAttribute.UNDEAD)) {
+    // immune to life leech
+    return (h) => new HitDistribution([new WeightedHit(1.0, [h])]);
+  }
+
+  const chance = 0.055 * kandarinFactor(ctx);
+  const effectMax = Math.trunc(maxHit * (zcb ? 132 : 120) / 100);
+
+  const effectDist = HitDistribution.linear(1.0, 0, effectMax);
+  return (h) => {
+    if (!h.accurate) {
+      return new HitDistribution([new WeightedHit(1.0, [h])]);
+    }
+    if (zcb && spec) {
+      return effectDist;
+    }
+    return new HitDistribution([
+      ...effectDist.scaleProbability(chance).hits,
+      new WeightedHit(1 - chance, [new Hitsplat(h.damage, h.accurate)]),
+    ]);
+  };
+};
+
+export const ascensiondiamondBolts: BoltTransformer = (ctx) => {
+  const { maxHit, zcb, spec } = ctx;
+  const chance = 0.05 * kandarinFactor(ctx);
+  const effectMax = Math.trunc(maxHit * (zcb ? 126 : 115) / 100);
+
+  const effectDist = HitDistribution.linear(1.0, 0, effectMax);
+  return (h) => {
+    if (h.accurate && zcb && spec) {
+      return effectDist;
+    }
+    return new HitDistribution([
+      ...effectDist.scaleProbability(chance).hits,
+      new WeightedHit(1 - chance, [new Hitsplat(h.damage, h.accurate)]),
+    ]);
+  };
+};

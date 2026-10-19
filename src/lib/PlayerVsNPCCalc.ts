@@ -89,6 +89,8 @@ import {
   opalBolts,
   pearlBolts,
   rubyBolts,
+  ascensiondiamondBolts,
+  ascensiononyxBolts,
 } from '@/lib/dists/bolts';
 import { burningClawDoT, burningClawSpec, dClawDist } from '@/lib/dists/claws';
 
@@ -1063,7 +1065,7 @@ export default class PlayerVsNPCCalc extends BaseCalc {
 
     if ((this.wearing('Tome of Fire') && this.player.equipment.shield?.version === 'Charged' && this.getSpellement() === 'fire')
       || (this.wearing('Tome of Water') && this.player.equipment.shield?.version === 'Charged' && this.getSpellement() === 'water')
-       || (this.wearing('Tome of Earth') && this.player.equipment.shield?.version === 'Charged' && this.getSpellement() === 'earth')) {
+      || (this.wearing('Tome of Earth') && this.player.equipment.shield?.version === 'Charged' && this.getSpellement() === 'earth')) {
       maxHit = this.trackFactor(DetailKey.MAX_HIT_TOME, maxHit, [11, 10]);
     }
 
@@ -1814,6 +1816,10 @@ export default class PlayerVsNPCCalc extends BaseCalc {
         dist = dist.transform(dragonstoneBolts(boltContext));
       } else if (this.wearing(['Onyx bolts (e)', 'Onyx dragon bolts (e)']) && !mattrs.includes(MonsterAttribute.UNDEAD)) {
         dist = dist.transform(onyxBolts(boltContext));
+      } else if (this.wearing(['Onyx ascension bolts']) && !mattrs.includes(MonsterAttribute.UNDEAD)) {
+        dist = dist.transform(ascensiononyxBolts(boltContext));
+      } else if (this.wearing(['Diamond ascension bolts'])) {
+        dist = dist.transform(ascensiondiamondBolts(boltContext));
       }
     }
 
@@ -1895,8 +1901,8 @@ export default class PlayerVsNPCCalc extends BaseCalc {
 
     // monsters that are always max hit no matter what
     if ((this.player.style.type === 'magic' && ALWAYS_MAX_HIT_MONSTERS.magic.includes(this.monster.id))
-          || (this.isUsingMeleeStyle() && ALWAYS_MAX_HIT_MONSTERS.melee.includes(this.monster.id))
-          || (this.player.style.type === 'ranged' && ALWAYS_MAX_HIT_MONSTERS.ranged.includes(this.monster.id))) {
+      || (this.isUsingMeleeStyle() && ALWAYS_MAX_HIT_MONSTERS.melee.includes(this.monster.id))
+      || (this.player.style.type === 'ranged' && ALWAYS_MAX_HIT_MONSTERS.ranged.includes(this.monster.id))) {
       if (YAMA_VOID_FLARE_IDS.includes(this.monster.id) && this.player.buffs.markOfDarknessSpell && this.player.spell?.name.includes('Demonbane')) {
         const demonbaneFactor = this.wearing('Purging staff') ? 50 : 25;
         return new AttackDistribution([HitDistribution.single(1.0, [new Hitsplat(max + Math.trunc(Math.trunc(max * demonbaneFactor / 100) * this.demonbaneVulnerability() / 100))])]);
