@@ -1,9 +1,12 @@
 name: Deploy to GitHub Pages
 
 on:
+  # Deploy from main, and also on tag pushes to match main.yml's release behaviour
   push:
     branches:
-      - pages-test
+      - main
+    tags:
+      - '*'
   # Allows deploying without pushing a commit, e.g. while iterating on the setup
   workflow_dispatch:
 
