@@ -1,0 +1,76 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Deploy from main, and also on tag pushes to match main.yml's release behaviour
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  # Allows deploying without pushing a commit, e.g. while iterating on the setup
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never allow concurrent deploys; cancel superseded runs instead
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Use Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: 'yarn'
+      - run: yarn install
+
+      # Env is set inline rather than via a committed .env file so that it is visible in
+      # the job log. These values drive next.config.js `basePath`, the canonical URL, and
+      # the Share modal link, all of which must match the Pages URL.
+      #
+      # Note that unlike main.yml we deliberately do NOT run `mv cdn out/`. The cdn/
+      # directory is ~205MB, but nothing in the build needs it: monster/equipment images
+      # are loaded at runtime from tools.runescape.wiki (see getCdnImage in src/utils.ts),
+      # and cdn/json/*.json is bundled into the JS at build time. Shipping it would add
+      # ~200MB of incompressible PNG to every deployment.
+      - name: Build static site
+        run: yarn build
+        env:
+          NEXT_PUBLIC_BASE_URL: https://t3ajae.github.io
+          NEXT_PUBLIC_BASE_PATH: /osrs-dps-calc
+          NEXT_PUBLIC_SHORTLINK_URL: https://t3ajae.github.io/osrs-dps-calc
+
+      # Without .nojekyll, GitHub Pages runs the output through Jekyll, which discards
+      # any path starting with an underscore -- i.e. the entire _next/ directory.
+      - name: Disable Jekyll processing
+        run: touch out/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: out/
+          # Defaults to false, which would strip the .nojekyll file we just created.
+          include-hidden-files: true
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

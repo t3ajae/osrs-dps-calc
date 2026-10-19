@@ -168546,12 +168546,12 @@
     "isTwoHanded": true
   },
   {
-    "name": "ascension bolts",
+    "name": "Ascension bolts",
     "id": 4204202,
     "weight": 0,
     "version": "",
     "slot": "ammo",
-    "image": "Diamond dragon bolts 5.png",
+    "image": "Dragon bolts 5.png",
     "speed": 0,
     "category": "",
     "bonuses": {
