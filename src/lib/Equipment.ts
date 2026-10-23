@@ -86,7 +86,7 @@ const commonAmmoCategories = () => {
   ret.cb_t46 = [...ret.cb_t36, 9143, 9290, 9297, 9304, 9339, 9242, 9340, 9243]; // Adamant bolts + variants, ruby/diamond bolts + (e)
   ret.cb_t61 = [...ret.cb_t46, 9144, 9291, 9298, 9305, 11875, 21316, 9341, 9244, 9342, 9245]; // Runite bolts + variants, broad bolts, amethyst broad bolts, dragonstone/onyx bolts + (e)
   ret.cb_t64 = [...ret.cb_t61, 21905, 21924, 21926, 21928, 21955, 21932, 21957, 21934, 21959, 21936, 21961, 21938, 21963, 21940, 21965, 21942, 21967, 21944, 21969, 21946, 21971, 21948, 21973, 21950, 4204202, 4204203]; // Dragon bolts + variants, many gem-tipped bolts
-  ret.cb_t70 = [4204202, 4204203, 4204204]; // Ascension Bolts guessing t70
+  ret.cb_t80 = [34684, 34690, 34696, 34702, 34708]; // Ascension Bolts t80
   return ret;
 };
 
@@ -145,7 +145,7 @@ const ammoForRangedWeapons: { [weapon: number]: number[] } = {
   21012: commonAmmoCategories().cb_t64, // Dragon hunter crossbow
   11785: commonAmmoCategories().cb_t64, // Armadyl crossbow
   26374: commonAmmoCategories().cb_t64, // Zaryte crossbow
-  4204201: commonAmmoCategories().cb_t70, // Ascension Crossbow
+  34681: commonAmmoCategories().cb_t80, // Ascension Crossbow
   33251: commonAmmoCategories().cb_t64, // King's barrage todo(leagues): replace id from cache
   12924: [], // Toxic blowpipe (empty)
   12926: [], // Toxic blowpipe (charged)
